@@ -248,12 +248,13 @@ try {
             $d     = getInput();
             $login = trim($d['login'] ?? '');
             if (empty($login)) { err('El campo login es requerido'); break; }
-            $stmt  = $conn->prepare(
-                "SELECT u.*, p.nombre AS perfil, e.razon_social AS empresa
-                   FROM usuarios u
-                   JOIN perfiles p ON p.id_perfil  = u.id_perfil
-                   JOIN empresas e ON e.id_empresa = u.id_empresa
-                  WHERE (u.username = :login1 OR u.email = :login2) AND u.activo = 1"
+        
+            $stmt = $conn->prepare(
+                "SELECT u.*, p.nombre AS perfil, p.nivel_acceso AS nivel_acceso, e.razon_social AS empresa
+                    FROM usuarios u
+                    JOIN perfiles p ON p.id_perfil = u.id_perfil
+                    JOIN empresas e ON e.id_empresa = u.id_empresa
+                    WHERE (u.username = :login1 OR u.email = :login2) AND u.activo = 1"
             );
             // ✅ CORREGIDO: dos parámetros distintos con el mismo valor
             $stmt->execute([':login1' => $login, ':login2' => $login]);
