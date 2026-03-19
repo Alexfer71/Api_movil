@@ -150,12 +150,12 @@ try {
         case 'usuarios_listar':
             $stmt = $conn->query(
                 "SELECT u.id_usuario, u.username, u.email, u.nombres, u.apellidos,
-                        u.activo, u.created_at,
-                        e.razon_social AS empresa, p.nombre AS perfil
-                   FROM usuarios u
-                   JOIN empresas e ON e.id_empresa = u.id_empresa
-                   JOIN perfiles p ON p.id_perfil  = u.id_perfil
-                  ORDER BY u.id_usuario"
+                u.activo, u.created_at,
+                e.razon_social AS empresa, p.nombre AS perfil, p.nivel_acceso
+                FROM usuarios u
+                JOIN empresas e ON e.id_empresa = u.id_empresa
+                JOIN perfiles p ON p.id_perfil = u.id_perfil
+                ORDER BY u.id_usuario"
             );
             ok($stmt->fetchAll());
             break;
@@ -164,12 +164,12 @@ try {
             $id = intval($_GET['id'] ?? 0);
             $stmt = $conn->prepare(
                 "SELECT u.id_usuario, u.id_empresa, u.id_perfil, u.username, u.email,
-                        u.nombres, u.apellidos, u.activo, u.created_at,
-                        e.razon_social AS empresa, p.nombre AS perfil
-                   FROM usuarios u
-                   JOIN empresas e ON e.id_empresa = u.id_empresa
-                   JOIN perfiles p ON p.id_perfil  = u.id_perfil
-                  WHERE u.id_usuario = :id"
+                u.nombres, u.apellidos, u.activo, u.created_at,
+                e.razon_social AS empresa, p.nombre AS perfil, p.nivel_acceso
+                FROM usuarios u
+                JOIN empresas e ON e.id_empresa = u.id_empresa
+                JOIN perfiles p ON p.id_perfil = u.id_perfil
+                WHERE u.id_usuario = :id"
             );
             $stmt->execute([':id' => $id]);
             $row = $stmt->fetch();
