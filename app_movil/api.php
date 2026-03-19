@@ -149,9 +149,19 @@ try {
         // ══════════════════════════════════════════════════════════════
         case 'usuarios_listar':
             $stmt = $conn->query(
-                "SELECT u.id_usuario, u.username, u.email, u.nombres, u.apellidos,
-                u.activo, u.created_at,
-                e.razon_social AS empresa, p.nombre AS perfil, p.nivel_acceso
+                "SELECT 
+                    u.id_usuario,
+                    u.id_empresa,
+                    u.id_perfil,
+                    u.username,
+                    u.email,
+                    u.nombres,
+                    u.apellidos,
+                    u.activo,
+                    u.created_at,
+                    e.razon_social AS empresa,
+                    p.nombre AS perfil,
+                    p.nivel_acceso AS nivel_acceso
                 FROM usuarios u
                 JOIN empresas e ON e.id_empresa = u.id_empresa
                 JOIN perfiles p ON p.id_perfil = u.id_perfil
@@ -163,9 +173,20 @@ try {
         case 'usuario_obtener':
             $id = intval($_GET['id'] ?? 0);
             $stmt = $conn->prepare(
-                "SELECT u.id_usuario, u.id_empresa, u.id_perfil, u.username, u.email,
-                u.nombres, u.apellidos, u.activo, u.created_at,
-                e.razon_social AS empresa, p.nombre AS perfil, p.nivel_acceso
+                "SELECT 
+                    u.id_usuario,
+                    u.id_empresa,
+                    u.id_perfil,
+                    u.username,
+                    u.email,
+                    u.nombres,
+                    u.apellidos,
+                    u.activo,
+                    u.created_at,
+                    u.updated_at,
+                    e.razon_social AS empresa,
+                    p.nombre AS perfil,
+                    p.nivel_acceso AS nivel_acceso
                 FROM usuarios u
                 JOIN empresas e ON e.id_empresa = u.id_empresa
                 JOIN perfiles p ON p.id_perfil = u.id_perfil
@@ -245,23 +266,50 @@ try {
         // SOLUCIÓN: usar :login1 y :login2 con el mismo valor
         // ══════════════════════════════════════════════════════════════
         case 'usuario_login':
-            $d     = getInput();
+            $d = getInput();
             $login = trim($d['login'] ?? '');
-            if (empty($login)) { err('El campo login es requerido'); break; }
-        
+
+            if (empty($login)) { 
+                err('El campo login es requerido'); 
+                break; 
+            }
+
             $stmt = $conn->prepare(
-                "SELECT u.*, p.nombre AS perfil, p.nivel_acceso AS nivel_acceso, e.razon_social AS empresa
-                    FROM usuarios u
-                    JOIN perfiles p ON p.id_perfil = u.id_perfil
-                    JOIN empresas e ON e.id_empresa = u.id_empresa
-                    WHERE (u.username = :login1 OR u.email = :login2) AND u.activo = 1"
+                "SELECT 
+                    u.id_usuario,
+                    u.id_empresa,
+                    u.id_perfil,
+                    u.username,
+                    u.email,
+                    u.password,
+                    u.nombres,
+                    u.apellidos,
+                    u.activo,
+                    u.created_at,
+                    u.updated_at,
+                    p.nombre AS perfil,
+                    p.nivel_acceso AS nivel_acceso,
+                    e.razon_social AS empresa
+                FROM usuarios u
+                JOIN perfiles p ON p.id_perfil = u.id_perfil
+                JOIN empresas e ON e.id_empresa = u.id_empresa
+                WHERE (u.username = :login1 OR u.email = :login2) 
+                AND u.activo = 1"
             );
-            // ✅ CORREGIDO: dos parámetros distintos con el mismo valor
-            $stmt->execute([':login1' => $login, ':login2' => $login]);
+
+            $stmt->execute([
+                ':login1' => $login,
+                ':login2' => $login
+            ]);
+
             $user = $stmt->fetch();
+
             if ($user && password_verify($d['password'] ?? '', $user['password'])) {
                 unset($user['password']);
-                ok(['message' => 'Login exitoso', 'usuario' => $user]);
+                ok([
+                    'message' => 'Login exitoso',
+                    'usuario' => $user
+                ]);
             } else {
                 err('Credenciales incorrectas', 401);
             }

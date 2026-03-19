@@ -828,178 +828,106 @@ function MainNavigator() {
   const admin = isAdmin(usuario);
 
   const adminTabs = [
-    { key:'dashboard',   label:'Inicio',     icon:'🏠' },
-    { key:'empresas',    label:'Empresas',   icon:'🏢' },
-    { key:'perfiles',    label:'Perfiles',   icon:'🪪' },
-    { key:'usuarios',    label:'Usuarios',   icon:'👤' },
-    { key:'categorias',  label:'Categ.',     icon:'🗂️' },
-    { key:'proveedores', label:'Proveed.',   icon:'🚚' },
-    { key:'clientes',    label:'Clientes',   icon:'👥' },
-    { key:'productos',   label:'Productos',  icon:'📦' },
-    { key:'formas_pago', label:'F.Pago',     icon:'💳' },
-    { key:'ordenes',     label:'Órdenes',    icon:'🧾' },
-    { key:'facturas',    label:'Facturas',   icon:'🧮' },
+    { key:'dashboard',   label:'Inicio',    icon:'🏠' },
+    { key:'empresas',    label:'Empresas',  icon:'🏢' },
+    { key:'perfiles',    label:'Perfiles',  icon:'🎭' },
+    { key:'usuarios',    label:'Usuarios',  icon:'👥' },
+    { key:'categorias',  label:'Categ.',    icon:'🗂️' },
+    { key:'proveedores', label:'Proveed.',  icon:'🏭' },
+    { key:'clientes',    label:'Clientes',  icon:'🤝' },
+    { key:'productos',   label:'Productos', icon:'📦' },
+    { key:'formas_pago', label:'F.Pago',    icon:'💳' },
+    { key:'ordenes',     label:'Órdenes',   icon:'🛒' },
+    { key:'facturas',    label:'Facturas',  icon:'🧾' },
   ];
 
   const userTabs = [
-    { key:'dashboard', label:'Inicio',    icon:'🏠' },
-    { key:'clientes',  label:'Clientes',  icon:'👥' },
-    { key:'productos', label:'Productos', icon:'📦' },
-    { key:'ordenes',   label:'Órdenes',   icon:'🧾' },
-    { key:'facturas',  label:'Facturas',  icon:'🧮' },
+    { key:'dashboard',  label:'Inicio',    icon:'🏠' },
+    { key:'clientes',   label:'Clientes',  icon:'🤝' },
+    { key:'productos',  label:'Productos', icon:'📦' },
+    { key:'ordenes',    label:'Órdenes',   icon:'🛒' },
+    { key:'facturas',   label:'Facturas',  icon:'🧾' },
   ];
 
   const tabs = admin ? adminTabs : userTabs;
-
   const [active, setActive] = useState('dashboard');
-  const [stack, setStack] = useState([]);
+  const [stack,  setStack]  = useState([]);
 
-  const navigate = (screen, params) => setStack(s => [...s, { screen, params }]);
-  const goBack = () => setStack(s => s.slice(0, -1));
+  const navigate   = (screen, params) => setStack(s => [...s, { screen, params }]);
+  const goBack     = () => setStack(s => s.slice(0, -1));
   const resetStack = () => setStack([]);
-
-  const current = stack.length > 0 ? stack[stack.length - 1] : null;
+  const current    = stack.length > 0 ? stack[stack.length - 1] : null;
 
   function renderContent() {
     if (current) {
       const { screen, params } = current;
       const cp = { params, navigate, goBack, resetStack, usuario, admin };
-
       switch (screen) {
-        case 'empresa_detalle': return <EmpresaDetalle {...cp} />;
-        case 'perfil_detalle': return <PerfilDetalle {...cp} />;
-        case 'usuario_detalle': return <UsuarioDetalle {...cp} />;
-        case 'categoria_detalle': return <CategoriaDetalle {...cp} />;
-        case 'proveedor_detalle': return <ProveedorDetalle {...cp} />;
-        case 'cliente_detalle': return <ClienteDetalle {...cp} />;
-        case 'producto_detalle': return <ProductoDetalle {...cp} />;
-        case 'forma_pago_detalle': return <FormaPagoDetalle {...cp} />;
-        case 'orden_detalle': return <OrdenDetalle {...cp} />;
-        case 'factura_detalle': return <FacturaDetalle {...cp} />;
-        default: return <Empty msg="Pantalla no encontrada" />;
+        case 'empresa_detalle':    return <EmpresaDetalle    {...cp} />;
+        case 'perfil_detalle':     return <PerfilDetalle     {...cp} />;
+        case 'usuario_detalle':    return <UsuarioDetalle    {...cp} />;
+        case 'categoria_detalle':  return <CategoriaDetalle  {...cp} />;
+        case 'proveedor_detalle':  return <ProveedorDetalle  {...cp} />;
+        case 'cliente_detalle':    return <ClienteDetalle    {...cp} />;
+        case 'producto_detalle':   return <ProductoDetalle   {...cp} />;
+        case 'forma_pago_detalle': return <FormaPagoDetalle  {...cp} />;
+        case 'orden_detalle':      return <OrdenDetalle      {...cp} />;
+        case 'factura_detalle':    return <FacturaDetalle    {...cp} />;
+        default:                   return <Empty msg="Pantalla no encontrada" />;
       }
     }
 
     const p = { navigate, usuario, admin };
-
     switch (active) {
-      case 'dashboard':   return <DashboardScreen {...p} signOut={signOut} />;
-      case 'empresas':    return <EmpresasScreen {...p} />;
-      case 'perfiles':    return <PerfilesScreen {...p} />;
-      case 'usuarios':    return <UsuariosScreen {...p} />;
-      case 'categorias':  return <CategoriasScreen {...p} />;
+      case 'dashboard':   return <DashboardScreen   {...p} signOut={signOut} />;
+      case 'empresas':    return <EmpresasScreen    {...p} />;
+      case 'perfiles':    return <PerfilesScreen    {...p} />;
+      case 'usuarios':    return <UsuariosScreen    {...p} />;
+      case 'categorias':  return <CategoriasScreen  {...p} />;
       case 'proveedores': return <ProveedoresScreen {...p} />;
-      case 'clientes':    return <ClientesScreen {...p} />;
-      case 'productos':   return <ProductosScreen {...p} />;
-      case 'formas_pago': return <FormasPagoScreen {...p} />;
-      case 'ordenes':     return <OrdenesScreen {...p} />;
-      case 'facturas':    return <FacturasScreen {...p} />;
-      default:            return <DashboardScreen {...p} signOut={signOut} />;
+      case 'clientes':    return <ClientesScreen    {...p} />;
+      case 'productos':   return <ProductosScreen   {...p} />;
+      case 'formas_pago': return <FormasPagoScreen  {...p} />;
+      case 'ordenes':     return <OrdenesScreen     {...p} />;
+      case 'facturas':    return <FacturasScreen     {...p} />;
+      default:            return <DashboardScreen   {...p} signOut={signOut} />;
     }
   }
 
   return (
     <SafeAreaView style={{ flex:1, backgroundColor:C.bg }}>
-      <StatusBar barStyle="light-content" backgroundColor={C.primaryDark} />
-
+      <StatusBar barStyle="light-content" backgroundColor={C.primaryDk} />
       <View style={{ flex:1 }}>
         {renderContent()}
       </View>
-
-      {!current && (
-        <View style={nav.wrap}>
-          <View style={nav.tabBar}>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={nav.tabScroll}
-            >
-              {tabs.map(t => {
-                const sel = active === t.key;
-
-                return (
-                  <TouchableOpacity
-                    key={t.key}
-                    style={[nav.tab, sel && nav.tabSel]}
-                    onPress={() => {
-                      resetStack();
-                      setActive(t.key);
-                    }}
-                    activeOpacity={0.88}
-                  >
-                    <View style={[nav.iconWrap, sel && nav.iconWrapSel]}>
-                      <Text style={nav.tabIcon}>{t.icon}</Text>
-                    </View>
-
-                    <Text style={[nav.tabLbl, sel && nav.tabLblSel]}>
-                      {t.label}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
-          </View>
-        </View>
-      )}
+      {/* ── TAB BAR ── */}
+      <View style={nav.tabBar}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={nav.tabScroll}>
+          {tabs.map(t => {
+            const sel = active === t.key && !current;
+            return (
+              <TouchableOpacity key={t.key}
+                style={[nav.tab, sel && nav.tabSel]}
+                onPress={() => { resetStack(); setActive(t.key); }}
+              >
+                <Text style={nav.tabIcon}>{t.icon}</Text>
+                <Text style={[nav.tabLbl, sel && nav.tabLblSel]}>{t.label}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
-
 const nav = StyleSheet.create({
-  wrap: {
-    backgroundColor: 'transparent',
-    paddingHorizontal: 10,
-    paddingBottom: 6,
-    paddingTop: 4,
-  },
-  tabBar: {
-    backgroundColor: C.card,
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: C.border,
-    paddingVertical: 6,
-    ...SHADOW,
-  },
-  tabScroll: {
-    paddingHorizontal: 6,
-    alignItems: 'center',
-  },
-  tab: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderRadius: 18,
-    minWidth: 72,
-    marginHorizontal: 2,
-  },
-  tabSel: {
-    backgroundColor: C.primaryLight,
-  },
-  iconWrap: {
-    width: 38,
-    height: 38,
-    borderRadius: 13,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: C.bgSoft,
-  },
-  iconWrapSel: {
-    backgroundColor: C.white,
-  },
-  tabIcon: {
-    fontSize: 18,
-  },
-  tabLbl: {
-    fontSize: 10.5,
-    color: C.tabInactive,
-    marginTop: 6,
-    fontWeight: '700',
-  },
-  tabLblSel: {
-    color: C.primary,
-    fontWeight: '800',
-  },
+  tabBar:   { backgroundColor:C.white, borderTopWidth:1, borderTopColor:C.border, elevation:10 },
+  tabScroll:{ paddingHorizontal:4, paddingVertical:4 },
+  tab:      { alignItems:'center', paddingHorizontal:12, paddingVertical:6, borderRadius:10, minWidth:58 },
+  tabSel:   { backgroundColor:C.primary + '18' },
+  tabIcon:  { fontSize:18 },
+  tabLbl:   { fontSize:10, color:C.textLight, marginTop:2 },
+  tabLblSel:{ color:C.primary, fontWeight:'700' },
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
